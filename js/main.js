@@ -106,11 +106,11 @@ class Cart extends List {
     }
 
     addProduct(element) {
-        this._getJson()
+        this._getJson(`${API}/addToBasket.json`)
             .then(data => {
                 if (data.result === 1) {
                     let productId = +element.dataset['id'];
-                    let find = this.allProducts.find(product.id_product === productId);
+                    let find = this.allProducts.find(product => product.id_product === productId);
                     if (find) {
                         find.quantity++;
                         this._updateCart(find);
@@ -134,7 +134,7 @@ class Cart extends List {
             .then(data => {
                 if(data.result === 1){
                     let productId = +element.dataset['id'];
-                    let find = this.allProducts.find(product => product.id_product ===productId)
+                    let find = this.allProducts.find(product => product.id_product === productId);
                     if(find.quantity > 1){
                         find.quantity--;
                         this._updateCart(find);
@@ -150,18 +150,19 @@ class Cart extends List {
 
     _updateCart(product){
         let block = document.querySelector(`.cart-item[data-id="${product.id_product}"]`);
-        block.querySelector('product-quantity').textContent = `Quantity: ${product.quantity}`;
-        block.querySelector('product-price').textContent = `${product.quantity*product.price}`;
+        block.querySelector('.product-quantity').textContent = `Quantity: ${product.quantity}`;
+        block.querySelector('.product-price').textContent = `${product.quantity*product.price}`;
     }
     _init(){
-        a
-        document.querySelector(this.container).addEventListener('click', e =>{
+        document.querySelector('.btn-cart').addEventListener('click', () => {
+           document.querySelector(this.container).classList.toggle('invisible');
+        });
+        document.querySelector(this.container).addEventListener('click', e => {
             if(e.target.classList.contains('del-btn')) {
                 this.removeProduct(e.target);
             }
         })
     }
-
 }
 
 class CartItem extends Item {
@@ -182,7 +183,8 @@ class CartItem extends Item {
                    </div>
                    <div class="rigth-block">
                    <p class="product-price">$${this.quantity*this.price}</p>
-                    <button class="del-btn" data-id="$this.id_product">x</button>
+                    <button class="del-btn" data-id="${this.id_product}">x</button>
+                   
                 </div>
                 </div>
             </div>`
